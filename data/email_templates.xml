@@ -1,0 +1,45 @@
+<odoo>
+  <data>
+    <!-- Mail template for sending the iN‑Clue survey invitation -->
+    <record id="mail_template_inclue_survey" model="mail.template">
+      <field name="name">iN‑Clue Survey Invitation</field>
+      <!-- Make sure this matches the XML ID of your inclue.participation model -->
+      <field name="model_id" ref="in_clue_event_surveys.model_inclue_participation"/>
+      <field name="subject">You're invited to take the iN‑Clue Survey</field>
+
+      <!-- Sender: must match an allowed SMTP identity -->
+      <field name="email_from">laurence45@ethereal.email</field>
+      <!-- Recipient: partner’s email -->
+      <field name="email_to">{{ (object.partner_id.email_formatted or object.email) }}</field>
+      <!-- Use partner’s language, defaulting to English -->
+      <field name="lang">${object.partner_id.lang or 'en_US'}</field>
+      <!-- Keep emails in the queue so you can inspect them -->
+      <field name="auto_delete" eval="False"/>
+
+      <field name="body_html"><![CDATA[
+        <div style="font-family: Arial, sans-serif; font-size: 14px; color: #333; line-height: 1.6;">
+          <p>Hellos <t t-esc="object.partner_id.name"/>,</p>
+
+          <p>Thank you for attending <strong><t t-esc="object.event_id.name"/></strong>.</p>
+
+          <p>We would really appreciate your feedback. Please take a moment to complete this short survey:</p>
+
+            <p style="margin: 20px 0;">
+                <a t-att-href="object.user_input_id.get_start_url()" target="_blank"
+                    style="background-color: #008f8c; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px;">
+                    👉 Start the Survey
+                </a>
+
+            </p>
+
+
+          <p>No login is required. Your response will be automatically linked to your participation.</p>
+
+          <p>Thank you again for your time and your insights!</p>
+
+          <p>Warm regards,<br/>The iN‑Clue Team</p>
+        </div>
+      ]]></field>
+    </record>
+  </data>
+</odoo>
