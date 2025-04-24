@@ -9,7 +9,7 @@
         analysis and automated follow-ups.
     """,
     'author': 'Your Name or Company',
-    'depends': ['base', 'event', 'survey', 'mail'],
+    'depends': ['base', 'event', 'survey', 'mail', 'web'],
     'data': [
         'security/ir.model.access.csv',
         'views/event_form.xml',

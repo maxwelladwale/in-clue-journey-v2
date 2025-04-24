@@ -17,6 +17,25 @@ class EventEvent(models.Model):
         help="Indicates if the survey has been sent to attendees."
     )
 
+    # In the EventEvent class, add this method:
+    def get_next_session_type(self, partner):
+        participation_model = self.env['inclue.participation']
+        participations = participation_model.search([
+            # ('event_id', '=', event.id),
+            ('partner_id', '=', partner.id),
+            ('survey_sent', '=', True)
+        ])
+
+        completed_sessions = {p.session_type for p in participations if p.session_type}
+
+        # Define session types in order
+        session_types = ['kickoff', 'followup1', 'followup2', 'followup3', 'followup4', 'followup5', 'followup6']
+        
+        for session_type in session_types:
+            if session_type not in completed_sessions:
+                return session_type  # First uncompleted session
+
+        return None  # All sessions done
     def action_send_inclue_survey(self):
         _logger.info("action_send_inclue_survey() called for event IDs: %s", self.ids)
         participation_model = self.env['inclue.participation']
@@ -59,13 +78,18 @@ class EventEvent(models.Model):
                     _logger.info("Existing participation record found with ID: %s for partner: %s", participation.id, partner.name)
                 else:
                     _logger.info("No participation record found. Creating one for partner: %s", partner.name)
+                    session_type = self.get_next_session_type(partner)
+                    if not session_type:
+                        _logger.info("All sessions completed for partner %s. No new participation needed.", partner.name)
+                        continue
                     participation = participation_model.create({
                         'event_id': event.id,
                         'partner_id': partner.id,
                         'survey_id': event.survey_id.id,
-                        'session_type': 'kickoff',
+                        'session_type': session_type,  # ✅ Use the calculated one
                         'survey_sent': False,
                     })
+                    _logger.info("Assigning session_type '%s' to participation for partner %s", session_type, partner.name)
                     _logger.info("Created new participation record with ID: %s", participation.id)
 
                 if participation.send_survey_email():
