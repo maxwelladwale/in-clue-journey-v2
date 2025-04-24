@@ -1,0 +1,32 @@
+<odoo>
+    <data>
+        <record id="view_partner_form_facilitator" model="ir.ui.view">
+            <field name="name">res.partner.form.facilitator</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <!-- Add facilitator checkbox near the top -->
+                <xpath expr="//field[@name='category_id']" position="after">
+                    <field name="is_facilitator"/>
+                </xpath>
+                
+                <!-- Add facilitator tab when is_facilitator is true -->
+                <notebook position="inside">
+                    <page string="Facilitator Details" attrs="{'invisible': [('is_facilitator', '=', False)]}">
+                        <group>
+                            <group string="Facilitation Information">
+                                <field name="facilitator_languages" widget="many2many_tags"/>
+                                <field name="facilitator_regions" widget="many2many_tags"/>
+                                <field name="facilitator_rate" attrs="{'invisible': [('category_id', 'not ilike', 'External Facilitator')]}"/>
+                            </group>
+                            <group string="Statistics">
+                                <field name="facilitation_count"/>
+                                <field name="participant_count"/>
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+    </data>
+</odoo>

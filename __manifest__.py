@@ -12,6 +12,8 @@
     'depends': ['base', 'event', 'survey', 'mail', 'web'],
     'data': [
         'security/ir.model.access.csv',
+        'security/security.xml',
+        'views/res_partner_view.xml',
         'views/event_form.xml',
         'views/participation_tracking.xml',
         'data/email_templates.xml',
