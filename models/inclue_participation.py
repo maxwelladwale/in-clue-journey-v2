@@ -57,7 +57,6 @@ class InclueParticipation(models.Model):
         string='Completion Date',
         help="The date when the participation was completed."
     )
-
     @api.model
     def create(self, vals):
         _logger.info("Creating a new inclue.participation record with vals: %s", vals)
@@ -173,27 +172,3 @@ class InclueParticipation(models.Model):
             else:
                 rec.completed = False
                 _logger.info("Participation ID %s not completed", rec.id)
-    
-    def get_survey_link(self):
-        try:
-            if not self.user_input_id or not self.user_input_id.survey_id or not self.user_input_id.access_token:
-                raise ValueError("Survey ID or Access Token is missing.")
-
-            # survey_url = self.user_input_id.survey_id.get_start_url(self.user_input_id.access_token)
-            survey_url = self.user_input_id.get_start_url()
-            if survey_url:
-                _logger.info("Survey URL generated: %s", survey_url)
-                return survey_url
-            else:
-                raise ValueError("Failed to generate survey URL.")
-
-        except Exception as e:
-            _logger.error("Error retrieving survey link: %s", str(e))
-            return None
-    def get_start_url(self):
-        _logger.info("Generating start URL for survey ID: %s", self.survey_id.id)
-        if not self.survey_id:
-            raise UserError("Survey ID is missing.")
-        if not self.access_token:
-            raise UserError("Access token is missing.")
-        return f"/survey/start/{slug(self.survey_id)}/{self.access_token}"
