@@ -1,0 +1,20 @@
+<odoo>
+    <data>
+        <record id="view_partner_form_facilitator" model="ir.ui.view">
+            <field name="name">res.partner.form.facilitator</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='category_id']" position="after">
+                    <field name="is_facilitator"/>
+                </xpath>
+                <!-- Add other fields as needed -->
+                <xpath expr="//sheet//group" position="after">
+                    <group>
+                        <field name="facilitator_rate" attrs="{'invisible': [('is_facilitator', '=', False)]}"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -31,5 +31,16 @@
                 </xpath>
             </field>
         </record>
+        <record id="view_event_form_inclue_facilitator" model="ir.ui.view">
+            <field name="name">event.event.form.inclue.facilitator</field>
+            <field name="model">event.event</field>
+            <field name="inherit_id" ref="event.view_event_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='organizer_id']" position="after">
+                    <field name="facilitator_id" options="{'no_create': True}"/>
+                    <field name="facilitator_type" readonly="1"/>
+                </xpath>
+            </field>
+        </record>
     </data>
 </odoo>
