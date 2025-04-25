@@ -8,10 +8,34 @@
                 <tree string="Participation Tracking">
                     <field name="partner_id" string="Partner ID"/>
                     <field name="event_id" string="Event ID"/>
+                    <!-- <field name="event_id" domain="[('company_id', '=', company_id)]"/> -->
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="journey_tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+
+                    <field name="facilitator_id" string="Facilitator ID"/>
                     <field name="session_type" string="Session Type"/>
                     <field name="completed" string="Status"/>
                     <field name="date_completed" string="Date Completed"/>
                 </tree>
+            </field>
+        </record>
+
+        <record id="view_inclue_participation_search" model="ir.ui.view">
+            <field name="name">inclue.participation.search</field>
+            <field name="model">inclue.participation</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="partner_id"/>
+                    <field name="event_id"/>
+                    <field name="facilitator_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <filter string="My Sessions" name="my_facilitations" domain="[('facilitator_id', '=', uid)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Facilitator" name="group_facilitator" context="{'group_by': 'facilitator_id'}"/>
+                        <filter string="Company" name="group_company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                        <filter string="Journey Tags" name="group_journey_tags" context="{'group_by': 'journey_tag_ids'}"/>
+                    </group>
+                </search>
             </field>
         </record>
 
@@ -24,6 +48,11 @@
                         <group>
                             <field name="partner_id" string="Partner ID"/>
                             <field name="event_id" string="Event ID"/>
+                            <!-- <field name="event_id" string="Event ID" attrs="{'domain': [('company_id', '=', company_id)]}"/> -->
+                            <field name="journey_tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                            <!-- <field name="event_id" domain="[('company_id', '=', company_id)]"/> -->
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="facilitator_id" string="Facilitator ID"/>
                             <field name="survey_id" string="Survey ID"/>
                             <field name="user_input_id" string="User Input ID"/>
                             <field name="session_type" string="Session Type"/>
@@ -41,8 +70,9 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="menu_inclue_journey_root" name="iN-Clue Journey" sequence="10"/>
+        <menuitem id="menu_inclue_journey_root" name="iN-Clue Journey" 
+          sequence="10" groups="base.group_user,in_clue_event_surveys.group_inclue_facilitator"/>
         <menuitem id="menu_inclue_participation" name="Participation Tracking" 
-                parent="menu_inclue_journey_root" action="action_inclue_participation" sequence="10"/>
+            parent="menu_inclue_journey_root" action="action_inclue_participation" sequence="10"/>
     </data>
 </odoo>

@@ -50,6 +50,22 @@ class InclueParticipation(models.Model):
         default=False,
         help="Indicates if the survey has been sent to the participant."
     )
+    # Add to inclue_participation.py
+    journey_tag_ids = fields.Many2many(
+        'event.tag',
+        relation='inclue_participation_event_tag_rel',  # Custom relation table name
+        column1='participation_id',                     # Column for this model's ID
+        column2='tag_id',                              # Column for related model's ID
+        related='event_id.tag_ids',                    # Keep this related definition
+        string='Journey Tags',
+        store=True
+    )
+    company_id = fields.Many2one(
+        'res.company', 
+        string='Company',
+        default=lambda self: self.env.company,
+        required=True
+    )
     session_type = fields.Selection([
         ('kickoff', 'KickOff Session'),
         ('followup1', 'FollowUp Session 1'),
@@ -70,20 +86,20 @@ class InclueParticipation(models.Model):
     )
 
     # # @api.depends('facilitator_id', 'facilitator_id.category_id')
-    # def _compute_facilitator_type(self):
-    #     for event in self:
-    #         if not event.facilitator_id:
-    #             event.facilitator_type = False
-    #             continue
+    def _compute_facilitator_type(self):
+        for event in self:
+            if not event.facilitator_id:
+                event.facilitator_type = False
+                continue
                 
-    #         # Check categories to determine if internal or external
-    #         categories = event.facilitator_id.category_id.mapped('name')
-    #         if 'Internal Facilitator' in categories:
-    #             event.facilitator_type = 'internal'
-    #         elif 'External Facilitator' in categories:
-    #             event.facilitator_type = 'external'
-    #         else:
-    #             event.facilitator_type = False
+            # Check categories to determine if internal or external
+            categories = event.facilitator_id.category_id.mapped('name')
+            if 'Internal Facilitator' in categories:
+                event.facilitator_type = 'internal'
+            elif 'External Facilitator' in categories:
+                event.facilitator_type = 'external'
+            else:
+                event.facilitator_type = False
 
     @api.model
     def create(self, vals):

@@ -88,6 +88,7 @@ class EventEvent(models.Model):
                         'survey_id': event.survey_id.id,
                         'session_type': session_type,  # ✅ Use the calculated one
                         'survey_sent': False,
+                        'company_id': event.company_id.id,
                     })
                     _logger.info("Assigning session_type '%s' to participation for partner %s", session_type, partner.name)
                     _logger.info("Created new participation record with ID: %s", participation.id)

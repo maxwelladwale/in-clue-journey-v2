@@ -17,6 +17,30 @@
                 </xpath>
             </field>
         </record>
+
+        <!-- Multi-company rules -->
+        <!-- <record id="inclue_participation_event_company_rule" model="ir.rule">
+            <field name="name">iN-Clue Events: Same company rule</field>
+            <field name="model_id" ref="model_inclue_participation"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="global" eval="True"/>
+        </record> -->
+
+        <!-- Facilitator can only see their own participations -->
+        <!-- <record id="inclue_facilitator_rule" model="ir.rule">
+            <field name="name">Facilitator: See only own records</field>
+            <field name="model_id" ref="model_inclue_participation"/>
+            <field name="domain_force">[('facilitator_id', '=', user.partner_id.id)]</field>
+            <field name="groups" eval="[(4, ref('group_inclue_facilitator'))]"/>
+        </record> -->
+
+        <!-- Additional rule for surveys - facilitators can only see their own -->
+        <!-- <record id="inclue_survey_facilitator_rule" model="ir.rule">
+            <field name="name">Survey: Facilitators see only their surveys</field>
+            <field name="model_id" ref="survey.model_survey_survey"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_inclue_facilitator'))]"/>
+        </record> -->
         <!-- You can add other security rules here -->
         
     </data>
